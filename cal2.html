@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+body {
+  background: linear-gradient(45deg, #ff0055, #00ff99);
+  font-family: Arial, sans-serif;
+}
+
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .input-box {
+      text-align: center;
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-comment {
+      position: absolute;
+      top: -20px;
+      left: 0;
+      padding: 2px 5px;
+      background-color: #ff5a5f;
+      color: #fff;
+      font-size: 12px;
+      border-radius: 5px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease-in-out, visibility 0s linear 0.3s;
+    }
+
+    .input-box:hover .input-comment {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.3s ease-in-out;
+    }
+
+   .glow-input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  box-shadow: 0 0 0 2px transparent;
+  transition: box-shadow 0.3s ease-in-out;
+  color: #fff;
+  background-color: #000; 
+}
+
+
+    .glow-input:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(255, 90, 95, 0.7);
+    }
+
+    .submit-button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      background-color: #ff5a5f;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .question {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      margin-top: 20px;
+    }
+
+    .option {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <p class="question">Hi, <span id="userName"></span>! Can you tell me your secret?</p>
+    <div class="options">
+      <button class="option submit-button" onclick="showSecretInput()">Yes</button>
+      <button class="option submit-button" onclick="redirectToSadPage()">No</button>
+    </div>
+    <div id="secretInputContainer" style="display: none; margin-top: 20px;">
+      <div class="input-box">
+        <input type="text" id="secretInput" class="glow-input">
+        <div class="input-comment">What?</div>
+      </div>
+      <button class="submit-button" onclick="sendReason()">Submit</button>
+    </div>
+  </div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const name = decodeURIComponent(urlParams.get('name'));
+    document.getElementById("userName").textContent = name;
+
+    function showSecretInput() {
+      document.getElementById("secretInputContainer").style.display = "block";
+    }
+
+    function sendReason() {
+      var reason = document.getElementById("secretInput").value;
+      var name = decodeURIComponent(urlParams.get('name'));
+
+      var scriptUrl = "https://script.google.com/macros/s/AKfycbzdsJ032iVyZ5O4jFrEFwd7FE3lVY94-CD0DUAJ0sSkEE6f19NrDyUY_Hx24PCyuMS7/exec";
+
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", scriptUrl, true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          if (xhr.status === 200) {
+            alert("Reason sent!");
+          } else {
+            alert("An error occurred while sending the reason. Please try again.");
+          }
+        }
+      };
+
+      xhr.send("name=" + encodeURIComponent(name) + "&reason=" + encodeURIComponent(reason));
+    }
+
+    function redirectToSadPage() {
+      window.location.href = "sad.html";
+    }
+  </script>
+</body>
+</html>
